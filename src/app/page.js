@@ -1,66 +1,57 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+// import ClientComponent from "@/components/ClientCopmonent/ClientComponent";
+// import InteractiveComponent from "@/components/InteractiveComponent/InteractiveComponent";
+import StoreProvider from "./StoreProvider";
+import PostList from "./PostList";
 
-export default function Home() {
+export const metadata = {
+  title: "Letdiv HomePage",
+  description: " Đây là trung chủ của LetDiv ",
+};
+
+async function getPosts() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  if (!res.ok) {
+    throw new Error("Failed to fetch posts");
+  }
+  return res.json();
+}
+
+export default async function Home({ searchParams }) {
+  const initialPosts = await getPosts();
+  const nonSerializableProp = () => {
+    console.log("nonSerializableProp");
+  };
+  const { name = "Default", age = 18 } = await searchParams;
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
+    <StoreProvider initialPosts={initialPosts}>
+      <PostList initialPosts={initialPosts} />
+      <div className={styles.page}>
+        {/* <ClientComponent nonSerializableProp={nonSerializableProp} /> */}
+        <main className={styles.main}>
           <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+            Từ khoá tìm kiếm {name}, {age}
           </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+          <Image
+            className={styles.logo}
+            src="/next.svg"
+            alt="Next.js logo"
+            width={100}
+            height={20}
+            priority
+          />
+          <div className={styles.intro}>
+            <h1>Lam App</h1>
+            <p>
+              Looking for a starting point or more instructions? Head over to or
+              the center.
+            </p>
+          </div>
+          <div className={styles.ctas}></div>
+        </main>
+      </div>
+    </StoreProvider>
   );
 }
