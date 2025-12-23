@@ -1,11 +1,12 @@
 import { clearTimestampCache } from "./action";
 
+export const dynamic = "force-dynamic";
 async function fetchData() {
   console.log("fetching data...");
   const res = await fetch("http://localhost:3001/api/timestamp", {
-    cache: "force-cache", // áp dụng cache cho web
+    cache: "no-store", // áp dụng cache cho web (force-cache)
     // next: { revalidate: 5 }, // dữ liệu được tái xác thực sau mỗi 5s
-    next: { tags: ["timestamp"] },
+    // next: { tags: ["timestamp"] },
   });
 
   if (!res.ok) {
